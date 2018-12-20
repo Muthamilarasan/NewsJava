@@ -1,16 +1,14 @@
 package com.stackroute.NewsApp.domain;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.persistence.*;
-import java.util.Date;
+
 
 @Entity
 public class News {
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private int id;
+  private Long newsId;
 
   private String title;
   @Column(length = 1000)
@@ -23,8 +21,8 @@ public class News {
   @Column(length = 5000)
   private String content;
 
-  public News(int id, String title, String description, String url, String imageUrl, String publishedDate, String content) {
-    this.id = id;
+  public News(Long newsId, String title, String description, String url, String imageUrl, String publishedDate, String content) {
+    this.newsId = newsId;
     this.title = title;
     this.description = description;
     this.url = url;
@@ -37,12 +35,12 @@ public class News {
   public News() {
   }
 
-  public int getId() {
-    return id;
+  public Long getNewsId() {
+    return newsId;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public void setNewsId(Long newsId) {
+    this.newsId = newsId;
   }
 
   public String getTitle() {

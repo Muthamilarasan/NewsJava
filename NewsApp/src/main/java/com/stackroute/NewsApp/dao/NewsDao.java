@@ -6,6 +6,7 @@ import com.stackroute.NewsApp.model.NewsResponse;
 import com.stackroute.NewsApp.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.stackroute.NewsApp.exception.NewsNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,15 @@ public class NewsDao {
   public List<News> getAllNews(){
     List<News> newsList = newsRepository.findAll();
     return newsList;
+  }
+
+  public News getNewsWithId(Long id) throws NewsNotFoundException{
+    News news =  newsRepository.findByNewsId(id);
+    if(news != null) {
+      return news;
+    } else {
+      throw new NewsNotFoundException("Data Not availabe for the newsid :" + id);
+    }
   }
 
   public List<News> storeNewsData(NewsResponse newsData){
@@ -38,5 +48,31 @@ public class NewsDao {
       addedNews.add(newsRepository.save(news));
     }
  return addedNews;
+  }
+
+  public News createNews(News news){
+    return newsRepository.save(news);
+
+  }
+
+  public News updateNews(Long id, News news) throws NewsNotFoundException{
+
+    News newsToUpdate =  newsRepository.findByNewsId(id);
+    if(newsToUpdate != null) {
+      return newsRepository.save(news);
+    } else {
+      throw new NewsNotFoundException("Data Not availabe for the newsid :" + id);
+    }
+  }
+
+  public String deleteNews(Long id) throws NewsNotFoundException{
+
+    News news =  newsRepository.findByNewsId(id);
+    if(news != null) {
+      newsRepository.deleteById(id);
+    } else {
+      throw new NewsNotFoundException("Data Not availabe for the newsid :" + id);
+    }
+    return "Success";
   }
 }

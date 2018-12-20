@@ -2,6 +2,7 @@ package com.stackroute.NewsApp.service;
 
 import com.stackroute.NewsApp.HttpUtils.HttpClient;
 import com.stackroute.NewsApp.dao.NewsDao;
+import com.stackroute.NewsApp.dao.WishListDoa;
 import com.stackroute.NewsApp.domain.News;
 import com.stackroute.NewsApp.exception.NewsAlreadyExistException;
 import com.stackroute.NewsApp.exception.NewsNotFoundException;
@@ -18,6 +19,9 @@ public class NewsServiceImpl implements NewsService {
 
   @Autowired
   private NewsDao newsDao;
+
+  @Autowired
+  private WishListDoa wishListDoa;
 
   @Autowired
   private HttpClient httpClient;
@@ -44,4 +48,41 @@ public class NewsServiceImpl implements NewsService {
     }
     return newsList;
   }
+
+  @Override
+  public News getParticularNew(Long id) throws NewsNotFoundException{
+
+    return newsDao.getNewsWithId(id);
+  }
+
+  @Override
+  public News createNews(News news) {
+
+    return newsDao.createNews(news);
+  }
+
+  @Override
+  public News updateNews(Long id, News news) throws NewsNotFoundException {
+
+    return newsDao.updateNews(id, news);
+  }
+
+  @Override
+  public String deleteNews(Long id) throws NewsNotFoundException {
+
+    return newsDao.deleteNews(id);
+  }
+
+  @Override
+  public String addToWishList(String userID, Long id) throws NewsNotFoundException {
+
+    return wishListDoa.addNewsToWishList(id, userID);
+  }
+
+  @Override
+  public String removeFromWishList(String userID, Long id) throws NewsNotFoundException {
+
+    return wishListDoa.removeFromWishList(id, userID);
+  }
+
 }

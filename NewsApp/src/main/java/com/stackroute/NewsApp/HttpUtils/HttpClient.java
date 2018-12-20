@@ -21,8 +21,6 @@ import java.util.List;
 @Component
 public class HttpClient {
 
-  @Autowired
-  private NewsRepository newsRepository;
 
   public NewsResponse getAllNewsFromServer() {
 
@@ -38,7 +36,6 @@ public class HttpClient {
         throw new RuntimeException("Failed : HTTP error code : "
           + response.getStatusLine().getStatusCode());
       }
-      //String responseString = new BasicResponseHandler().handleResponse(response);
 
       ObjectMapper objectMapper = new ObjectMapper();
       NewsResponse newsData = objectMapper.readValue(response.getEntity().getContent(), NewsResponse.class);

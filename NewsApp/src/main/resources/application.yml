@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/newsdb
+    url: jdbc:mysql://localhost:3306/newsdb?useSSL=false
     username: root
-    password:
+    password: password
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate.ddl-auto: update
