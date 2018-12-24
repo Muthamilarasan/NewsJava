@@ -20,6 +20,7 @@ public class JwtTokenGeneratorImplementation implements TokenGenerator {
       .signWith(SignatureAlgorithm.HS256, "secretkey").compact();
     map.put("token", jwtToken);
     map.put("message", "Successfully loggedin");
+    map.put("userId", user.getUserId());
     return map;
   }
 
