@@ -4,6 +4,7 @@ import com.stackroute.NewsApp.HttpUtils.HttpClient;
 import com.stackroute.NewsApp.dao.NewsDao;
 import com.stackroute.NewsApp.dao.WishListDoa;
 import com.stackroute.NewsApp.domain.News;
+import com.stackroute.NewsApp.domain.WishList;
 import com.stackroute.NewsApp.exception.NewsAlreadyExistException;
 import com.stackroute.NewsApp.exception.NewsNotFoundException;
 import com.stackroute.NewsApp.model.NewsResponse;
@@ -26,12 +27,6 @@ public class NewsServiceImpl implements NewsService {
   @Autowired
   private HttpClient httpClient;
 
-
-  /**
-   * Desc: Get all the news
-   *
-   * @return List of News Object
-   */
   @Override
   public List<News> getNewsList() {
     List<News> newsList = new ArrayList<>();
@@ -83,6 +78,12 @@ public class NewsServiceImpl implements NewsService {
   public String removeFromWishList(String userID, Long id) throws NewsNotFoundException {
 
     return wishListDoa.removeFromWishList(id, userID);
+  }
+
+  @Override
+  public List<WishList> getAllWishListOfUser(String userID) throws NewsNotFoundException {
+
+    return wishListDoa.getAllWishListOfUser(userID);
   }
 
 }

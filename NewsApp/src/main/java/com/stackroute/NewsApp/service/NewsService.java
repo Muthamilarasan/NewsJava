@@ -1,6 +1,7 @@
 package com.stackroute.NewsApp.service;
 
 import com.stackroute.NewsApp.domain.News;
+import com.stackroute.NewsApp.domain.WishList;
 import com.stackroute.NewsApp.exception.NewsAlreadyExistException;
 import com.stackroute.NewsApp.exception.NewsNotFoundException;
 
@@ -21,5 +22,7 @@ public interface NewsService {
   String addToWishList(String userID, Long id) throws NewsNotFoundException;
 
   String removeFromWishList(String userID, Long id) throws NewsNotFoundException;
+
+  List<WishList> getAllWishListOfUser(String userId) throws NewsNotFoundException;
 
 }

@@ -2,6 +2,7 @@ package com.stackroute.NewsApp.controller;
 
 import com.stackroute.NewsApp.HttpUtils.HttpClient;
 import com.stackroute.NewsApp.domain.News;
+import com.stackroute.NewsApp.domain.WishList;
 import com.stackroute.NewsApp.exception.NewsAlreadyExistException;
 import com.stackroute.NewsApp.exception.NewsNotFoundException;
 import com.stackroute.NewsApp.service.NewsService;
@@ -71,6 +72,18 @@ public class NewsController {
       return new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
     }
   }
+
+  @RequestMapping(method = RequestMethod.GET, value = "/news/wishList/{userId}")
+  public ResponseEntity<?> getAllWishListOfUser(@PathVariable String userId)  {
+    System.out.println("Inside getAllWishListOfUser Controller function");
+    try {
+      return new ResponseEntity<List<WishList>>(newsService.getAllWishListOfUser(userId), HttpStatus.OK);
+    } catch (NewsNotFoundException e) {
+      System.out.println("Inside NewsNotFoundException for getAllWishListOfUser Controller function");
+      return new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+  }
+
 
   @RequestMapping(method = RequestMethod.POST, value = "/news/addToWishList/{id}")
   public ResponseEntity<String> addToWishList(@RequestHeader String userID, @PathVariable Long id) {

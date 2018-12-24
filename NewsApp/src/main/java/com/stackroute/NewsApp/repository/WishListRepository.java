@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface WishListRepository extends JpaRepository<WishList, Long> {
 
@@ -18,4 +19,6 @@ public interface WishListRepository extends JpaRepository<WishList, Long> {
 
     @Query(value = "SELECT w FROM WishList w WHERE w.userId = :userId AND w.newsId = :id")
     public WishList checkwishList(@Param("id") Long id, @Param("userId") String userId);
+
+    public List<WishList> findByUserId(String userId);
 }

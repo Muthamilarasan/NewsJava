@@ -8,6 +8,8 @@ import com.stackroute.NewsApp.repository.WishListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class WishListDoa {
 
@@ -46,5 +48,14 @@ public class WishListDoa {
             throw new NewsNotFoundException("Data Not availabe for the newsid :" + id);
         }
         return "Success";
+    }
+
+    public List<WishList> getAllWishListOfUser(String userId) throws NewsNotFoundException {
+
+        try {
+            return wishListRepository.findByUserId(userId);
+        } catch (Exception e) {
+            throw new NewsNotFoundException("No WishList Avaliable for UserID :" + userId);
+        }
     }
 }
