@@ -20,9 +20,6 @@ public class NewsController {
   @Autowired
   private NewsService newsService;
 
-  @Autowired
-  HttpClient httpClient;
-
   /**
    * Desc: Get all the news
    *

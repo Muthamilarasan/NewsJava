@@ -1,63 +1,134 @@
 package com.stackroute.newsapp.service;
 
+import com.stackroute.NewsApp.HttpUtils.HttpClient;
+import com.stackroute.NewsApp.dao.NewsDao;
+import com.stackroute.NewsApp.dao.WishListDoa;
 import com.stackroute.NewsApp.domain.News;
+import com.stackroute.NewsApp.domain.WishList;
 import com.stackroute.NewsApp.exception.NewsAlreadyExistException;
-import com.stackroute.NewsApp.exception.NewsNotFoundException;
-import com.stackroute.NewsApp.repository.NewsRepository;
 import com.stackroute.NewsApp.service.NewsServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import java.util.Optional;
-
-import static junit.framework.TestCase.assertNotNull;
+import java.util.ArrayList;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 public class NewsServiceImplTest {
 
   @Mock
-  NewsRepository newsRepo;
+  private NewsDao newsDao;
 
-  News news;
+  @Mock
+  private WishListDoa wishListDoa;
+
+  @Mock
+  private HttpClient httpClient;
+
+
+  private transient News news;
+
+  private transient WishList wishList;
 
   @InjectMocks
-  NewsServiceImpl newsServiceImpl;
+  private NewsServiceImpl newsServiceImpl;
 
-  Optional<News> options;
+  @Before
+  public void setupMock() {
+    MockitoAnnotations.initMocks(this);
+    long newsID = 1234;
+    long wishListID = 9874;
 
 
-
-
-  @Test
-  public void testMockCreation(){
-    assertNotNull("JPACreation fails");
+    this.news = new News(newsID, "Title", "Description", "News URL", "Image URl", "publishedDate", "News Content");
+    this.wishList = new WishList(wishListID, "UserID", newsID);
   }
 
-//  @Test
-//  public void testAddNewsSuccess() throws NewsAlreadyExistException {
-//    when(newsRepo.save(news)).thenReturn(news);
-//    News tempNews = newsServiceImpl.addNews(news);
-//    assertEquals(news.getTitle(),tempNews.getTitle());
-//  }
-//
-//  @Test(expected = NewsAlreadyExistException.class)
-//  public void testAddNewsFailure() throws NewsAlreadyExistException {
-//    when(newsRepo.findByTitle("My own News")).thenReturn(options);
-//    when(newsRepo.save(news)).thenReturn(news);
-//    News tempNews = newsServiceImpl.addNews(news);
-//    assertEquals(news.getTitle(),tempNews.getTitle());
-//  }
-//
-//
-//  @Test
-//  public void testDeleteNews() throws NewsNotFoundException {
-//    when(newsRepo.findByTitle("My own News")).thenReturn(options);
-//    newsRepo.deleteByTitle(news.getTitle());
-//    String result = newsServiceImpl.deleteNews(news.getTitle());
-//    assertEquals(result,"Successfully Deleted");
-//  }
+  @Test
+  public void getParticularNew() throws Exception, NewsAlreadyExistException {
+
+    long newsID = 1234;
+
+    when(newsDao.getNewsWithId(newsID)).thenReturn(news);
+    News tempNews = newsServiceImpl.getParticularNew(newsID);
+    assertEquals(news.getTitle(),tempNews.getTitle());
+  }
+
+  @Test
+  public void getNewsList() throws Exception {
+
+    List<News> newsArray = new ArrayList();
+
+    newsArray.add(news);
+
+    when(newsDao.getAllNews()).thenReturn(newsArray);
+    List<News> tempNews = newsServiceImpl.getNewsList();
+    assertEquals(newsArray.size(),tempNews.size());
+  }
+
+  @Test
+  public void createNews() throws Exception {
+
+
+    given(newsDao.createNews(Mockito.any(News.class))).willReturn(news);
+    News tempNews = newsServiceImpl.createNews(news);
+    assertEquals(news.getContent(),tempNews.getContent());
+  }
+
+  @Test
+  public void updateNews() throws Exception {
+    long newsID = 1234;
+
+    given(newsDao.updateNews(Mockito.anyLong(), Mockito.any(News.class))).willReturn(news);
+    News tempNews = newsServiceImpl.updateNews(newsID, news);
+    assertEquals(news.getDescription(),tempNews.getDescription());
+  }
+
+  @Test
+  public void deleteNews() throws Exception {
+    long newsID = 1234;
+
+    given(newsDao.deleteNews(Mockito.anyLong())).willReturn("Success");
+    String tempNews = newsServiceImpl.deleteNews(newsID);
+    assertEquals("Success",tempNews);
+  }
+
+  @Test
+  public void addToWishList() throws Exception {
+
+    long newsID = 1234;
+    String userId = "UserId";
+    given(wishListDoa.addNewsToWishList(Mockito.anyLong(), Mockito.anyString())).willReturn("Suucess");
+    String result = newsServiceImpl.addToWishList(userId, newsID);
+    assertEquals("Suucess",result);
+  }
+
+  @Test
+  public void removeFromWishList() throws Exception {
+
+    long newsID = 1234;
+    String userId = "UserId";
+    given(wishListDoa.removeFromWishList(Mockito.anyLong(), Mockito.anyString())).willReturn("Suucess");
+    String result = newsServiceImpl.removeFromWishList(userId, newsID);
+    assertEquals("Suucess",result);
+  }
+
+  @Test
+  public void getAllWishListOfUser() throws Exception {
+
+    List<WishList> wishListArray = new ArrayList();
+
+    wishListArray.add(wishList);
+    String userId = "UserId";
+    when(wishListDoa.getAllWishListOfUser(Mockito.anyString())).thenReturn(wishListArray);
+    List<WishList> tempWishList = newsServiceImpl.getAllWishListOfUser(userId);
+    assertEquals(wishListArray.size(),tempWishList.size());
+  }
+
+
 }
